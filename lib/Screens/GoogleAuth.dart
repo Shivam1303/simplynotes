@@ -1,8 +1,11 @@
+import 'dart:js';
+
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:simplynotes/Screens/HomeScreen.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final CollectionReference users =
@@ -11,7 +14,7 @@ final GoogleSignIn googleSignIn = GoogleSignIn();
 
 class GService {
   // String uid = '';
-  static Future<User?> signInWithGoogle() async {
+  static Future<User?> signInWithGoogle(BuildContext context) async {
     // Trigger the authentication flow
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
     // Obtain the auth details from the request
@@ -34,7 +37,13 @@ class GService {
     users.doc(user?.uid).get().then((doc) => {
           if (!doc.exists)
             //exsisting user
-            {users.doc(user?.uid).update(userData)}
+            {
+              users.doc(user?.uid).update(userData),
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => HomeScreen())),
+            }
           else
             //new user
             {users.doc(user?.uid).set(userData)}
