@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:simplynotes/addnote.dart';
+import 'package:simplynotes/Screens/addnote.dart';
 import 'package:simplynotes/style/app_style.dart';
 
 class EditNote extends StatefulWidget {
@@ -30,8 +30,12 @@ class _EditNoteState extends State<EditNote> {
     int cid1 = Random().nextInt(AppStyle.cardColor.length);
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: AppStyle.bgColor,
         actions: [
           ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppStyle.bgColor, // Background color
+              ),
               onPressed: () {
                 widget.docToEdit.reference.update({
                   'title': title.text,
@@ -42,10 +46,17 @@ class _EditNoteState extends State<EditNote> {
                 //   'content': content.text,
                 // }).whenComplete(() => Navigator.pop(context));
               },
-              child: Text('Save')),
+              child: Text(
+                'Save',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                ),
+              )),
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: AppStyle.bgColor,
         onPressed: () {
           widget.docToEdit.reference
               .delete()

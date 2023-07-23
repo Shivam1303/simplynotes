@@ -1,24 +1,30 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:simplynotes/addnote.dart';
+import 'package:simplynotes/Screens/addnote.dart';
 
-import '../editnote.dart';
+import 'editnote.dart';
 import '../style/app_style.dart';
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final ref = FirebaseFirestore.instance.collection('notes');
+  CollectionReference ref = FirebaseFirestore.instance
+      .collection('users')
+      .doc(FirebaseAuth.instance.currentUser!.uid)
+      .collection('unotes');
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppStyle.bgColor,
+      backgroundColor: AppStyle.mainColor,
       appBar: AppBar(
         backgroundColor: AppStyle.mainColor,
         title: const Text(
@@ -31,10 +37,10 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: AppStyle.mainColor,
+        backgroundColor: Colors.black,
         onPressed: () {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => AddNote()));
+              context, MaterialPageRoute(builder: (context) => Addnote()));
         },
         child: const Icon(Icons.add),
       ),
@@ -46,8 +52,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisCount: 2,
                 ),
                 itemCount: snapshot.hasData ? snapshot.data!.docs.length : 0,
-                itemBuilder: (_, index) {
-                  return GestureDetector(
+                itemBuilder: (context, index) {
+                  return GestureDetector  (
                     onTap: () {
                       Navigator.push(
                           context,
@@ -59,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Container(
                       margin: EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: AppStyle.cardColor[index % 5],
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Column(
